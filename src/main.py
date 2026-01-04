@@ -37,7 +37,7 @@ def main():
     if len(sys.argv) != 2:
         basepath = "/"
     else:
-        basepath = sys.argv[1]
+        basepath = "docs"
     copy_static(basepath)
     generate_pages_recursive("./content", "./template.html", basepath)
 
