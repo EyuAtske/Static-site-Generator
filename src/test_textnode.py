@@ -1,6 +1,7 @@
 import unittest
 
-from textnode import TextNode, TextType
+from textnode import *
+from htmlnode import *
 from main import *
 
 
@@ -25,7 +26,7 @@ class TestTextNode(unittest.TestCase):
         node = TextNode("i", TextType.IMAGE,"https:google.com")
         html_node = text_node_to_html_node(node)
         self.assertEqual(html_node.tag, "i")
-        self.assertEqual(html_node.value, None)
+        self.assertEqual(html_node.value, "")
         self.assertEqual(html_node.props, {
             "src": node.url,
             "alt": node.text

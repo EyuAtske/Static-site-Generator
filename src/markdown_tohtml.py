@@ -1,7 +1,6 @@
 from markdown_blocks import markdown_to_blocks, block_to_block_type, BlockType
-from textnode import TextNode, TextType
-from htmlnode import HTMLNode, ParentNode, LeafNode
-from main import text_to_textnodes, text_node_to_html_node
+from textnode import *
+from htmlnode import *
 def markdown_to_html_node(markdown):
     blocks = markdown_to_blocks(markdown)
     block_nodes = []
@@ -11,7 +10,7 @@ def markdown_to_html_node(markdown):
         if block_type == BlockType.PARAGRAPH:
             block = block.replace("\n", " ")
             html_node = HTMLNode("p", block)
-            parent_node = ParentNode(f"p", text_to_children(block)).to_html()
+            parent_node = ParentNode("p", text_to_children(block)).to_html()
             block_nodes.extend(text_to_children(parent_node))
         elif block_type == BlockType.HEADING:
             txt = block.split(" ")
@@ -35,7 +34,9 @@ def markdown_to_html_node(markdown):
             txt = block.split(" ")
             quote_content = " ".join(txt[1:])
             html_node = HTMLNode("blockquote", quote_content)
-            block_nodes.extend(text_to_children(block))
+            html_node.children = text_to_children(quote_content)
+            parent_node = ParentNode("blockquote", html_node.children).to_html()
+            block_nodes.extend(text_to_children(parent_node))
         elif block_type == BlockType.UNORDERED_LIST:
             lists = block.split("\n")
             ul_node = HTMLNode("ul", None)
@@ -63,7 +64,6 @@ def markdown_to_html_node(markdown):
             grand_parent_node = ParentNode("ol", ol_node.children).to_html()
             block_nodes.extend(text_to_children(grand_parent_node))
     parent_node = ParentNode("div", block_nodes)
-    print(parent_node.to_html())
     return parent_node
 def text_to_children(text):
     node = text_to_textnodes(text)
@@ -71,7 +71,3 @@ def text_to_children(text):
     for t in node:
         nodes.append(text_node_to_html_node(t))
     return nodes
-def parent_to_children(parent_node):
-    parent_node.children = text_to_children(parent_node.value)
-    parent = ParentNode(parent_node.tag, parent_node.children)
-    return parent.to_html()
