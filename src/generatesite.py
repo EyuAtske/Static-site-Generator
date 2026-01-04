@@ -16,7 +16,7 @@ def extract_title(markdown):
         raise ValueError
     except ValueError as v:
         print("There is no h1 element")
-def generate_page(from_path, template_path, dest_path):
+def generate_page(from_path, template_path, dest_path, basepath):
     print(f"Generating page from {from_path} to {dest_path} using {template_path}")
 
     with open(from_path, mode='r') as markdown_file:
@@ -25,9 +25,9 @@ def generate_page(from_path, template_path, dest_path):
         href_matches = re.findall(r"href=\(\/\)", md)
         src_matches = re.findall(r"src=\(\/\)", md)
         for match in href_matches:
-            md = md.replace(match, f"href={dest_path}")
+            md = md.replace(match, f"href={basepath}")
         for match in src_matches:
-            md = md.replace(match, f"src={dest_path}")
+            md = md.replace(match, f"src={basepath}")
     
     with open(template_path, mode='r') as temp_file:
         temp = temp_file.read()
@@ -37,24 +37,24 @@ def generate_page(from_path, template_path, dest_path):
 
     with open(dest_path, 'w') as f:
         f.write(template)
-def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path, basepath):
     print(dir_path_content)
     if os.path.exists(dir_path_content):
         all_files = os.listdir(dir_path_content)
-        file_to_page(dir_path_content, template_path, dest_dir_path, all_files)
+        file_to_page(dir_path_content, template_path, dest_dir_path, all_files, basepath)
     else:
         raise FileNotFoundError(f"{dir_path_content} does not exist")
-def file_to_page(dir_path_content, template_path, dest_dir_path, files):
+def file_to_page(dir_path_content, template_path, dest_dir_path, files, basepath):
     for file in files:
         content_path = os.path.join(dir_path_content, file)
         if os.path.isfile(content_path):
             file_path = Path(content_path)
             if file_path.suffix.lower() == ".md":
                 full_path = os.path.join(dest_dir_path, "index.html")
-                generate_page(content_path, template_path, full_path)
+                generate_page(content_path, template_path, full_path, basepath)
         else:
             new_dest_dir = os.path.join(dest_dir_path, file)
             os.mkdir(new_dest_dir)
             new_dir = content_path
             next_files = os.listdir(new_dir)
-            file_to_page(new_dir, template_path, new_dest_dir, next_files)
+            file_to_page(new_dir, template_path, new_dest_dir, next_files, basepath)

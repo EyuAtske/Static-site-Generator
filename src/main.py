@@ -5,14 +5,12 @@ import shutil
 import sys
 
 def copy_static(basepath):
-    parent_dir = os.path.dirname("static")
-    public_dir = os.path.join(parent_dir, basepath)
-    static_dir = os.path.join(parent_dir, "static")
-    shutil.rmtree(public_dir, ignore_errors=True)
-    os.mkdir(public_dir)
+    static_dir = "./static"
+    shutil.rmtree(basepath, ignore_errors=True)
+    os.mkdir(basepath)
     if os.path.exists(static_dir):
         all_files = os.listdir(static_dir)
-        copy_files(public_dir, static_dir, all_files)
+        copy_files(basepath, static_dir, all_files)
     else:
         raise FileNotFoundError("Static folder does not exist")
 def copy_files(public, static, files):
@@ -34,12 +32,13 @@ def copy_files(public, static, files):
 
 def main():
     basepath = ""
+    output_dir = "./docs"
     if len(sys.argv) != 2:
         basepath = "/"
     else:
-        basepath = "docs"
-    copy_static(basepath)
-    generate_pages_recursive("./content", "./template.html", basepath)
+        basepath = sys.argv[1]
+    copy_static(output_dir)
+    generate_pages_recursive("./content", "./template.html", output_dir, basepath)
 
 if __name__ == "__main__":
     main()
