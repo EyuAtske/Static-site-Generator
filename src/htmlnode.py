@@ -59,8 +59,6 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
             type_text = []
             queue = []
             c = 0
-            if chr[c] == delimiter:
-                print(True, old.text)
             try:
                 while c < len(chr):
                     if text_type == TextType.BOLD:
