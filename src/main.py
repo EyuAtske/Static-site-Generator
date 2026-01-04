@@ -2,10 +2,11 @@ from generatesite import generate_page, generate_pages_recursive
 import re
 import os
 import shutil
+import sys
 
-def copy_static():
+def copy_static(basepath):
     parent_dir = os.path.dirname("static")
-    public_dir = os.path.join(parent_dir, "public")
+    public_dir = os.path.join(parent_dir, basepath)
     static_dir = os.path.join(parent_dir, "static")
     shutil.rmtree(public_dir, ignore_errors=True)
     os.mkdir(public_dir)
@@ -32,8 +33,13 @@ def copy_files(public, static, files):
         copy_files(new_public, new_static, file)
 
 def main():
-    copy_static()
-    generate_pages_recursive("./content", "./template.html", "./public")
+    basepath = ""
+    if len(sys.argv) != 2:
+        basepath = "/"
+    else:
+        basepath = sys.argv[1]
+    copy_static(basepath)
+    generate_pages_recursive("./content", "./template.html", basepath)
 
 if __name__ == "__main__":
     main()

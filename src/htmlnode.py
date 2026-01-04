@@ -78,7 +78,6 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
                                 deli = chr[c] + chr[c+1]
                             c += 1
                             queue.append(("".join(inline).strip(), text_type))
-                            print(inline, text_type)
                             inline = []
                         else:
                             if c == len(chr)-2:
@@ -97,7 +96,6 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
                             c += 1
                         c += 1
                         queue.append(("".join(inline).strip(), text_type))
-                        print(inline, text_type)
                         inline = []
                     else:
                         type_text.append(chr[c])

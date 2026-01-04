@@ -1,4 +1,5 @@
 import os
+import re
 from pathlib import Path
 from markdown_blocks import markdown_to_blocks, block_to_block_type, BlockType
 from markdown_tohtml import markdown_to_html_node
@@ -21,6 +22,12 @@ def generate_page(from_path, template_path, dest_path):
     with open(from_path, mode='r') as markdown_file:
         markdown = markdown_file.read()
         md = markdown_to_html_node(markdown).to_html()
+        href_matches = re.findall(r"href=\(\/\)", md)
+        src_matches = re.findall(r"src=\(\/\)", md)
+        for match in href_matches:
+            md = md.replace(match, f"href={dest_path}")
+        for match in src_matches:
+            md = md.replace(match, f"src={dest_path}")
     
     with open(template_path, mode='r') as temp_file:
         temp = temp_file.read()
