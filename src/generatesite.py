@@ -23,7 +23,7 @@ def generate_page(from_path, template_path, dest_path, basepath):
         markdown = markdown_file.read()
         md = markdown_to_html_node(markdown).to_html()
         md = md.replace('href="/', f'href="{basepath}')
-        md = md.replace('src="/', f'src="{basepath}')\
+        md = md.replace('src="/', f'src="{basepath}')
     
     with open(template_path, mode='r') as temp_file:
         temp = temp_file.read()
